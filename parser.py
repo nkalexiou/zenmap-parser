@@ -21,7 +21,7 @@ def createcsv(json_dict,filename):
                 group3 = match.group(3)
                 group4 = match.group(4)
 
-                outf.write(key+"; "+group1 +"; "+group2+ "; "+group3 + "; "+ group4)
+                outf.write(key.strip()+"; "+group1 +"; "+group2+ "; "+group3 + "; "+ group4)
                 outf.write("\n")
 
 # create separate csv files with OS information
