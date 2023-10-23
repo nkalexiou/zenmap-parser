@@ -21,7 +21,7 @@ def createcsv(json_dict,filename):
                 group3 = match.group(3)
                 group4 = match.group(4)
 
-                outf.write(key.strip()+"; "+group1 +"; "+group2+ "; "+group3 + "; "+ group4)
+                outf.write(key.strip()+";"+group1.strip() +";"+group2.strip()+ ";"+group3.strip()+ ";"+ group4.strip())
                 outf.write("\n")
 
 # create separate csv files with OS information
@@ -29,7 +29,7 @@ def create_os_sv(os_dict,filename):
 
     with open(filename, "w+") as outf:
         for key,value in os_dict.items():
-            outf.write(key.strip()+"; "+value)
+            outf.write(key.strip()+";"+value.strip())
             outf.write("\n")
 
 
