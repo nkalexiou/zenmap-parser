@@ -1,4 +1,5 @@
 import re
+import os
 from collections import defaultdict
 
 # Creates a CSV file with
@@ -75,6 +76,8 @@ def read_file(filename):
             return dict_scan_results, dict_os
 
 if __name__ == "__main__":
-    json_dict1, os_dict1 = read_file("nmap-results.xml")
-    createcsv(json_dict1, "nmap-results.csv")
-    create_os_sv(os_dict1, "nmap-results-os.csv")
+    for xml_report in os.getcwd():
+        if xml_report.endswith(".xml"):
+            json_dict1, os_dict1 = read_file(xml_report)
+            createcsv(json_dict1, xml_report.replace(".xml","")+".csv")
+            create_os_sv(os_dict1, xml_report.replace(".xml","")+ "_os.csv")
