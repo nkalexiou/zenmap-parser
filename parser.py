@@ -76,8 +76,9 @@ def read_file(filename):
             return dict_scan_results, dict_os
 
 if __name__ == "__main__":
-    for xml_report in os.getcwd():
-        if xml_report.endswith(".xml"):
+    for xml_report in os.listdir(os.getcwd()):
+        if os.path.isfile(xml_report) and xml_report.endswith(".xml"):
+            print("Processing file: " + xml_report)
             json_dict1, os_dict1 = read_file(xml_report)
             createcsv(json_dict1, xml_report.replace(".xml","")+".csv")
             create_os_sv(os_dict1, xml_report.replace(".xml","")+ "_os.csv")
