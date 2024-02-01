@@ -15,7 +15,6 @@ This creates an output folder which contains the CSV reports. The main CSV repor
 | 192.168.10.54 | 21/tcp        | open    |     ftp     :| vsftpd 2.4  :|
 | 192.168.10.55 | 22/tcp        | open    |     ssh     :| OpenSSH 6.0 :|
 
-An additional CSV report is created and contain Operating System information. 
-Both of these are created per NMAP XML report.
+An additional CSV report is created and contain Operating System information. Both of these are created per NMAP XML report.
 
-Additionally, a CSV report called "all.csv" containing all CSV reports will be created.
+Finally, a CSV report called "all.csv" containing all CSV reports will be created.
