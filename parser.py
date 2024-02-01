@@ -2,6 +2,8 @@ import re
 import os
 from collections import defaultdict
 
+output_dir = "output"
+
 # Creates a CSV file with
 # asset (IP), port/protocol, status (open/closed/filtered), application, information
 def createcsv(json_dict,filename):
@@ -38,47 +40,63 @@ def create_os_sv(os_dict,filename):
 def read_file(filename):
     
     with open(filename,'r') as f:
-
-        outputfile = "results_"+filename+".txt"
-
-        with open(outputfile, "w") as outf:
         
-            dict_scan_results = defaultdict(list)
-            dict_os = {}
+        dict_scan_results = defaultdict(list)
+        dict_os = {}
 
-            target = ""
-            line = f.readline()
-            while line:
-                match = re.match(r'^(Nmap scan report for)(.*)', line)
-                if match:
-                    target = match.group(2)
+        target = ""
+        line = f.readline()
+        while line:
+            match = re.match(r'^(Nmap scan report for)(.*)', line)
+            if match:
+                target = match.group(2)
 
+            else:
+                match2 = re.match(r'^(\d{1,8}\/)', line)
+                if match2:
+                    dict_scan_results[target].append(line)
+                
                 else:
-                    match2 = re.match(r'^(\d{1,8}\/)', line)
-                    if match2:
-                        dict_scan_results[target].append(line)
-                    
-                    else:
-                        #OS details: Microsoft Windows Server 202X build XXXXX - XXXXX
-                        # If OS details line is found
-                        if "OS details" in line:
-                            match3 = re.match(r'^(OS details:)(.*)$',line)
-                            
-                            if match3:
-                                dict_os[target]=match3.group(2).strip()
+                    #OS details: Microsoft Windows Server 202X build XXXXX - XXXXX
+                    # If OS details line is found
+                    if "OS details" in line:
+                        match3 = re.match(r'^(OS details:)(.*)$',line)
                         
-                        # if not OS exact match line is found
-                        elif "No exact OS matches for host" in line:
-                            dict_os[target]="No exact OS matches for host"
+                        if match3:
+                            dict_os[target]=match3.group(2).strip()
                     
-                line=f.readline()
+                    # if not OS exact match line is found
+                    elif "No exact OS matches for host" in line:
+                        dict_os[target]="No exact OS matches for host"
+                
+            line=f.readline()
 
-            return dict_scan_results, dict_os
+        return dict_scan_results, dict_os
+
+def merge_files():
+    if os.path.exists(output_dir):
+        with open(output_dir+"/"+"all.csv", "w+") as outf:
+            for csv_file in os.listdir(output_dir):
+                if os.path.isfile(output_dir+"/"+csv_file) and csv_file.endswith(".csv") and not "os" in csv_file and not "all" in csv_file:
+                    with open(output_dir+"/"+csv_file, "r") as inf:
+                        for line in inf:
+                            outf.write(line)
 
 if __name__ == "__main__":
+
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+    
+    if os.path.exists(output_dir):
+        #Remove all files from output directory
+        for file in os.listdir(output_dir):
+            os.remove(output_dir+"/"+file)
+
     for xml_report in os.listdir(os.getcwd()):
         if os.path.isfile(xml_report) and xml_report.endswith(".xml"):
             print("Processing file: " + xml_report)
             json_dict1, os_dict1 = read_file(xml_report)
-            createcsv(json_dict1, xml_report.replace(".xml","")+".csv")
-            create_os_sv(os_dict1, xml_report.replace(".xml","")+ "_os.csv")
+            createcsv(json_dict1, output_dir + "/" + xml_report.replace(".xml","")+".csv")
+            create_os_sv(os_dict1, output_dir + "/" + xml_report.replace(".xml","")+ "_os.csv")
+    
+    merge_files()
