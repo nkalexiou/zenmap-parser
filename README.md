@@ -1,21 +1,21 @@
 # zenmap-parser
-A python script to parse zenmap/nmap XML results and create a CSV file. 
+A python script to parse zenmap/nmap XML results and create a CSV file reports. 
 
-Run your nmap scan and output results to XML file format.
+First, run your nmap/Zenmap scan and output results to XML file format.
 
-Then simply execute 
+Then execute: 
 
 ```
 python parse.py 
 ```
-to get csv output of the most important details, which you can use further for reporting results and working further with the dataset.
-
-The CSV file has the following format:
+This creates an output folder which contains the CSV reports. The main CSV report has the following format:
 
 | asset/ip      | port/protocol | status  | application  | information  |
 | ------------- | -------------:| -------:| ------------:| ------------:|
 | 192.168.10.54 | 21/tcp        | open    |     ftp     :| vsftpd 2.4  :|
 | 192.168.10.55 | 22/tcp        | open    |     ssh     :| OpenSSH 6.0 :|
 
+An additional CSV report is created and contain Operating System information. 
+Both of these are created per NMAP XML report.
 
-Just don't forget to edit the names of the zenmap output XML files in the script. 
+Additionally, a CSV report called "all.csv" containing all CSV reports will be created.
